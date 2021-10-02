@@ -2,15 +2,23 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 
 const UserPage = () => {
-  // const [pointsArray, setPointsArray] = useState([]);
-  const [userImage, setUserImage] = useState(null);
-  const [points, setPoints] = useState(0);
-  const [PR, setPR] = useState(0);
-  const [issues, setIssues] = useState(0);
-  const [PRInfo, setPRInfo] = useState(null);
-  const [issueInfo, setIssueInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    image: null,
+    PR: 0,
+    issues: 0,
+    points: 0,
+  });
+
+  // const [userImage, setUserImage] = useState(null);
+  // const [points, setPoints] = useState(0);
+  // const [PR, setPR] = useState(0);
+  // const [issues, setIssues] = useState(0);
+
   const [PRArray, setPRArray] = useState([]);
   const [issueArray, setIssueArray] = useState([]);
+
+  const [PRInfo, setPRInfo] = useState(null);
+  const [issueInfo, setIssueInfo] = useState(null);
 
   const userID = "MintuJupally";
 
@@ -27,11 +35,16 @@ const UserPage = () => {
       )
       .then((response) => {
         console.log(response.data);
-        setPR(response.data.total_count);
-        setPRInfo(response.data.items);
-        if (userImage === null && response.data.total_count > 0) {
-          setUserImage(response.data.items[0].user.avatar_url);
+
+        const newData = { ...userInfo };
+        newData.PR = response.data.total_count;
+
+        if (newData.image === null && response.data.total_count > 0) {
+          newData.image = response.data.items[0].user.avatar_url;
         }
+
+        setUserInfo(newData);
+        setPRInfo(response.data.items);
       })
       .catch((error) => console.error(error));
   };
@@ -43,11 +56,16 @@ const UserPage = () => {
       )
       .then((response) => {
         console.log(response.data);
-        setIssues(response.data.total_count);
-        setIssueInfo(response.data.items);
-        if (userImage === null && response.data.total_count > 0) {
-          setUserImage(response.data.items[0].user.avatar_url);
+
+        const newData = { ...userInfo };
+        newData.issues = response.data.total_count;
+
+        if (newData.image === null && response.data.total_count > 0) {
+          newData.image = response.data.items[0].user.avatar_url;
         }
+
+        setUserInfo(newData);
+        setIssueInfo(response.data.items);
       })
       .catch((error) => console.error(error));
   };
@@ -96,7 +114,10 @@ const UserPage = () => {
 
     setIssueArray(Issues);
     setPRArray(PRs);
-    setPoints(score);
+
+    const newData = { ...userInfo };
+    newData.points = score;
+    setUserInfo(newData);
   };
 
   useEffect(() => {
@@ -107,6 +128,10 @@ const UserPage = () => {
   useEffect(() => {
     if (PRInfo && issueInfo) {
       refactorData();
+
+      console.log(userInfo);
+      console.log(PRArray);
+      console.log(issueArray);
     }
   }, [PRInfo, issueInfo]);
 
