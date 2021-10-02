@@ -46,11 +46,15 @@ const TableComponent = ({ data }) => {
                   {contr[0]}
                 </td>
                 {contr[1].pr > 0 ? (
-                  <td className={classes.cell} width="50px">
+                  <td
+                    className={classes.cell}
+                    width="50px"
+                    colSpan={contr[1].issue === 0 ? 2 : 1}
+                  >
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-evenly",
+                        justifyContent: "center",
                         alignItems: "center",
                       }}
                     >
@@ -80,6 +84,7 @@ const TableComponent = ({ data }) => {
                           display: "flex",
                           justifyContent: "space-evenly",
                           alignItems: "center",
+                          padding: "0px 5px",
                         }}
                       >
                         {contr[1].pr}
@@ -88,11 +93,15 @@ const TableComponent = ({ data }) => {
                   </td>
                 ) : null}
                 {contr[1].issue > 0 ? (
-                  <td className={classes.cell} width="50px">
+                  <td
+                    className={classes.cell}
+                    width="50px"
+                    colSpan={contr[1].pr === 0 ? 2 : 1}
+                  >
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-evenly",
+                        justifyContent: "center",
                         alignItems: "center",
                       }}
                     >
@@ -124,6 +133,7 @@ const TableComponent = ({ data }) => {
                           display: "flex",
                           justifyContent: "space-evenly",
                           alignItems: "center",
+                          padding: "0px 5px",
                         }}
                       >
                         {contr[1].issue}
