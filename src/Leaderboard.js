@@ -8,8 +8,8 @@ import axios from "axios";
 
 const Table = () => {
   // const [pointsArray, setPointsArray] = useState([]);
-  const [PRInfo, setPRInfo] = useState([]);
-  const [issueInfo, setIssueInfo] = useState([]);
+  const [PRInfo, setPRInfo] = useState(null);
+  const [issueInfo, setIssueInfo] = useState(null);
 
   const [data, setData] = useState(null);
   /**
@@ -121,7 +121,7 @@ const Table = () => {
   }, []);
 
   useEffect(() => {
-    if (PRInfo.length > 0) {
+    if (PRInfo && issueInfo) {
       refactorData();
     }
   }, [PRInfo, issueInfo]);
