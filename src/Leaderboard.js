@@ -1,10 +1,13 @@
 import { React, useState, useEffect } from "react";
 
+import TableComponent from "./components/TableComponent";
+
 import axios from "axios";
 
 const Table = () => {
   // const [pointsArray, setPointsArray] = useState([]);
   const [PRInfo, setPRInfo] = useState([]);
+  const [data, setData] = useState(null);
   /**
    
    * GitHub ID : {
@@ -72,6 +75,7 @@ const Table = () => {
     }
 
     console.log([...userMap.entries()]);
+    setData([...userMap.entries()]);
   };
 
   useEffect(() => {
@@ -84,7 +88,13 @@ const Table = () => {
     }
   }, [PRInfo]);
 
-  return null;
+  if (data)
+    return (
+      <div>
+        <TableComponent data={data} />
+      </div>
+    );
+  return <div>Loading...</div>;
 };
 
 export default Table;
