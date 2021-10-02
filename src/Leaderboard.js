@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
-
+import store from "./store/reducer";
+import * as boardActions from "./store/boardActions";
 import axios from "axios";
 
 const Table = () => {
@@ -46,8 +47,6 @@ const Table = () => {
   };
 
   const refactorData = () => {
-    console.log("Hii");
-
     const userMap = new Map();
 
     for (var j = 0; j < PRInfo.length; j++) {
@@ -106,6 +105,7 @@ const Table = () => {
     }
 
     console.log([...userMap.entries()]);
+    store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
   };
 
   useEffect(() => {
