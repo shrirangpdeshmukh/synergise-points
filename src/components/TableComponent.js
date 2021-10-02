@@ -1,4 +1,5 @@
 import { Avatar, makeStyles } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -24,9 +25,13 @@ const useStyles = makeStyles(() => ({
 
 const TableComponent = ({ data }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   console.log(data);
 
+  const displayUser = (author) => {
+    history.push(`/user/${author}`);
+  };
   return (
     <div
       style={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
@@ -35,7 +40,11 @@ const TableComponent = ({ data }) => {
         <tbody>
           {data.map((contr, index) => {
             return (
-              <tr className={classes.row} key={"rank-" + index}>
+              <tr
+                className={classes.row}
+                key={"rank-" + index}
+                onClick={() => displayUser(contr[0])}
+              >
                 <td className={classes.cell} width="50px">
                   {index + 1}
                 </td>
