@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import "./user.css";
 const useStyles = makeStyles(() => ({
   row: {
     boxShadow: "0px 0px 5px 5px rgb(0,0,0,0.05) ",
@@ -31,11 +31,16 @@ const useStyles = makeStyles(() => ({
     borderSpacing: "0px 8px",
     borderCollapse: "separate",
   },
+  avatar: {
+    width: "50px",
+    height: "50px",
+  },
 }));
 
 const UserComponent = () => {
   const classes = useStyles();
   const [userImage, setUserImage] = useState(null);
+  const [author, setAuthor] = useState(null);
   const [points, setPoints] = useState(0);
   const [PR, setPR] = useState(0);
   const [issues, setIssues] = useState(0);
@@ -132,7 +137,7 @@ const UserComponent = () => {
   useEffect(() => {
     const url = window.location.pathname;
     const username = url.split("/")[2];
-
+    setAuthor(username);
     getPRs(username);
     getContributorIssues(username);
   }, []);
@@ -150,8 +155,9 @@ const UserComponent = () => {
       <Card sx={{ maxWidth: 345 }}>
         <CardHeader
           avatar={<Avatar aria-label="recipe" src={userImage} />}
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={author}
+          subheader="User profile"
+          id="user-header"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
