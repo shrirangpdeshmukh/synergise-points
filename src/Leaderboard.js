@@ -115,9 +115,13 @@ const Table = () => {
     setData([...userMap.entries()]);
   };
 
-  useEffect(() => {
+  const getData = () => {
     getPRs();
     getContributorIssues();
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   useEffect(() => {
