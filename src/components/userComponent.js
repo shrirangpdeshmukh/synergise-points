@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserComponent.css";
-import store from "./../store/reducer";
+import store from "../store/reducer";
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -322,8 +322,7 @@ const UserComponent = () => {
     // console.log(currentUser);
 
     const newData = { ...currentUser };
-    // console.log(newData);
-    const userPrs = newData[1].PRs;
+    const userPrs = newData.PRs;
     // console.log(userPrs);
     let diffMap = new Map([
       ["very_easy", 0],
@@ -339,7 +338,7 @@ const UserComponent = () => {
     newData.medium = diffMap.get("medium");
     newData.hard = diffMap.get("hard");
     newData.very_easy = diffMap.get("very_easy");
-
+    console.log(newData);
     setUserInfo(newData);
   };
 
@@ -375,7 +374,7 @@ const UserComponent = () => {
         const issues = userData[1].issues;
         setPRArray(PRs);
         setIssueArray(issues);
-        processData(userData);
+        processData(userData[1]);
         // setUserInfo(userData[1]);
       }
     }
@@ -462,7 +461,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.easy}</span>
                 </p>
                 <p>
                   <svg
@@ -496,7 +495,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.medium}</span>
                 </p>
                 <p>
                   <svg
@@ -530,7 +529,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  {/* <span className={classes.span}>{userInfo.hard}</span> */}
+                  <span className={classes.span}>{userInfo.hard}</span>
                 </p>
                 <p>
                   <svg
@@ -564,7 +563,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.issue}</span>
                 </p>
               </CardActions>
             </Card>
