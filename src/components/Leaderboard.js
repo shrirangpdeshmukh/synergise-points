@@ -31,6 +31,18 @@ const Table = () => {
     return 0;
   };
 
+  const getRepo = (url) => {
+    return url.split("/")[url.split("/").length - 1];
+  };
+
+  const getDifficulty = (labels) => {
+    for (let label of labels) {
+      if (scoreMap.has(label.name)) {
+        return label.name;
+      }
+    }
+  };
+
   const getPRs = () => {
     axios
       .get(
@@ -64,12 +76,20 @@ const Table = () => {
   const processPRs = (userMap) => {
     for (let PR of PRInfo) {
       const increment = getIncrement(PR.labels);
+      const difficulty = getDifficulty(PR.labels);
 
       if (increment > 0) {
         if (userMap.has(PR.user.login)) {
           const updateData = userMap.get(PR.user.login);
           updateData.score += increment;
           updateData.pr++;
+          updateData.PRs.push({
+            link: PR.html_url,
+            title: PR.title,
+            difficulty: difficulty.split("-")[1],
+            repo: getRepo(PR.repository_url),
+          });
+
           userMap.set(PR.user.login, updateData);
         } else {
           const data = {
@@ -77,6 +97,15 @@ const Table = () => {
             pr: 1,
             issue: 0,
             score: increment,
+            PRs: [
+              {
+                link: PR.html_url,
+                title: PR.title,
+                difficulty: difficulty.split("-")[1],
+                repo: getRepo(PR.repository_url),
+              },
+            ],
+            issues: [],
           };
           userMap.set(PR.user.login, data);
         }
@@ -90,6 +119,11 @@ const Table = () => {
         const updateData = userMap.get(issue.user.login);
         updateData.score += 4;
         updateData.issue++;
+        updateData.issues.push({
+          link: issue.html_url,
+          title: issue.title,
+          repo: getRepo(issue.repository_url),
+        });
         userMap.set(issue.user.login, updateData);
       } else {
         const data = {
@@ -97,6 +131,14 @@ const Table = () => {
           pr: 0,
           issue: 1,
           score: 4,
+          issues: [
+            {
+              link: issue.html_url,
+              title: issue.title,
+              repo: getRepo(issue.repository_url),
+            },
+          ],
+          PRs: [],
         };
         userMap.set(issue.user.login, data);
       }
