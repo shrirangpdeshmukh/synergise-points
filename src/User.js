@@ -9,10 +9,7 @@ const UserPage = () => {
     points: 0,
   });
 
-  // const [userImage, setUserImage] = useState(null);
-  // const [points, setPoints] = useState(0);
-  // const [PR, setPR] = useState(0);
-  // const [issues, setIssues] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const [PRArray, setPRArray] = useState([]);
   const [issueArray, setIssueArray] = useState([]);
@@ -82,14 +79,10 @@ const UserPage = () => {
     }
   };
 
-  const refactorData = () => {
-    const PRs = [];
-    const Issues = [];
+  const processPRs = () => {
     let score = 0;
-
-    for (var i = 0; i < PRInfo.length; i++) {
-      const PR = PRInfo[i];
-
+    const PRs = [];
+    for (let PR of PRInfo) {
       const difficulty = getDifficulty(PR.labels);
       score += scoreMap.get(difficulty);
 
@@ -101,41 +94,154 @@ const UserPage = () => {
       });
     }
 
-    for (var j = 0; j < issueInfo.length; j++) {
-      const issue = issueInfo[j];
-      score += 4;
+    setPRArray(PRs);
+    return score;
+  };
 
-      Issues.push({
+  const processIssues = () => {
+    let score = 0;
+    const issues = [];
+    for (let issue of issueInfo) {
+      score += 4;
+      issues.push({
         link: issue.html_url,
         title: issue.title,
         repo: getRepo(issue.repository_url),
       });
     }
 
-    setIssueArray(Issues);
-    setPRArray(PRs);
+    setIssueArray(issues);
+    return score;
+  };
+
+  const processData = () => {
+    let score = 0;
+    score += processIssues();
+    score += processPRs();
 
     const newData = { ...userInfo };
     newData.points = score;
     setUserInfo(newData);
+
+    setLoading(false);
+  };
+
+  // const refactorData = () => {
+  //   const PRs = [];
+  //   const Issues = [];
+  //   let score = 0;
+
+  //   for (var i = 0; i < PRInfo.length; i++) {
+  //     const PR = PRInfo[i];
+
+  //     const difficulty = getDifficulty(PR.labels);
+  //     score += scoreMap.get(difficulty);
+
+  //     PRs.push({
+  //       link: PR.html_url,
+  //       title: PR.title,
+  //       difficulty: difficulty.split("-")[1],
+  //       repo: getRepo(PR.repository_url),
+  //     });
+  //   }
+
+  //   for (var j = 0; j < issueInfo.length; j++) {
+  //     const issue = issueInfo[j];
+  //     score += 4;
+
+  //     Issues.push({
+  //       link: issue.html_url,
+  //       title: issue.title,
+  //       repo: getRepo(issue.repository_url),
+  //     });
+  //   }
+
+  //   setIssueArray(Issues);
+  //   setPRArray(PRs);
+
+  //   const newData = { ...userInfo };
+  //   newData.points = score;
+  //   setUserInfo(newData);
+
+  //   setLoading(false);
+  // };
+
+  const getData = () => {
+    getPRs();
+    getContributorIssues();
   };
 
   useEffect(() => {
-    getPRs();
-    getContributorIssues();
+    getData();
   }, []);
 
   useEffect(() => {
     if (PRInfo && issueInfo) {
-      refactorData();
-
-      console.log(userInfo);
-      console.log(PRArray);
-      console.log(issueArray);
+      // refactorData();
+      processData();
     }
   }, [PRInfo, issueInfo]);
 
-  return null;
+  if (loading) return <div>Loading...</div>;
+  else {
+    return (
+      <div>
+        <img src={userInfo.image} alt={`${userID}`} />
+        <p>Name: {userID}</p>
+        <p>Score: {userInfo.points}</p>
+        <p>PR: {userInfo.PR}</p>
+        <p>Issues: {userInfo.issues}</p>
+
+        <p>
+          <table>
+            <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Title</th>
+                <th>Link</th>
+                <th>difficulty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PRArray.map((PR) => {
+                return (
+                  <tr key={PR.link}>
+                    <td>{PR.repo}</td>
+                    <td>{PR.title}</td>
+                    <td>{PR.link}</td>
+                    <td>{PR.difficulty}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </p>
+
+        <p>
+          <table>
+            <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Title</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              {issueArray.map((issue) => {
+                return (
+                  <tr key={issue.link}>
+                    <td>{issue.repo}</td>
+                    <td>{issue.title}</td>
+                    <td>{issue.link}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </p>
+      </div>
+    );
+  }
 };
 
 export default UserPage;
