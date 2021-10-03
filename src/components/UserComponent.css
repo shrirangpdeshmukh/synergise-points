@@ -1,0 +1,10 @@
+#user-header {
+  align-content: center;
+}
+#user-header .MuiAvatar-root {
+  height: 100px;
+  width: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
