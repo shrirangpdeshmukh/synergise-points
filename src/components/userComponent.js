@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserComponent.css";
-import store from "./../store/reducer";
+import store from "../store/reducer";
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -111,7 +111,7 @@ const UserComponent = () => {
   //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"`
   //     )
   //     .then((response) => {
-  //       // console.log(response.data);
+  //       // console.info(response.data);
 
   //       const newData = { ...userInfo };
   //       newData.PR = response.data.total_count;
@@ -133,7 +133,7 @@ const UserComponent = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
       )
       .then((response) => {
-        console.log(response.data);
+        console.info(response.data);
         setPRInfo(response.data.items);
       })
       .catch((error) => {
@@ -148,7 +148,7 @@ const UserComponent = () => {
   //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"`
   //     )
   //     .then((response) => {
-  //       // console.log(response.data);
+  //       // console.info(response.data);
 
   //       const newData = { ...userInfo };
   //       newData.issues = response.data.total_count;
@@ -172,7 +172,7 @@ const UserComponent = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
       )
       .then((response) => {
-        console.log(response.data);
+        console.info(response.data);
         setIssueInfo(response.data.items);
       })
       .catch((error) => {
@@ -213,7 +213,7 @@ const UserComponent = () => {
   //       repo: getRepo(PR.repository_url),
   //     });
   //   }
-  //   // console.log(PRs);
+  //   // console.info(PRs);
   //   const result = [...difficultyMap.entries(), score];
 
   //   setPRArray(PRs);
@@ -231,7 +231,7 @@ const UserComponent = () => {
   //       repo: getRepo(issue.repository_url),
   //     });
   //   }
-  //   // console.log(issues);
+  //   // console.info(issues);
   //   setIssueArray(issues);
   //   return score;
   // };
@@ -319,12 +319,11 @@ const UserComponent = () => {
   };
 
   const processData = (currentUser) => {
-    // console.log(currentUser);
+    // console.info(currentUser);
 
     const newData = { ...currentUser };
-    // console.log(newData);
-    const userPrs = newData[1].PRs;
-    // console.log(userPrs);
+    const userPrs = newData.PRs;
+    // console.info(userPrs);
     let diffMap = new Map([
       ["very_easy", 0],
       ["easy", 0],
@@ -348,18 +347,18 @@ const UserComponent = () => {
     processPRs(userMap);
     processIssues(userMap);
 
-    console.log([...userMap.entries()]);
+    console.info([...userMap.entries()]);
     // store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
     localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
 
     const currentUser = userMap.get(username);
-    console.log(currentUser);
+    console.info(currentUser);
     processData(currentUser);
     // setData([...userMap.entries()]);
   };
 
   const getData = (username) => {
-    console.log("axios requests");
+    console.info("axios requests");
     getPRs(username);
     getContributorIssues(username);
   };
@@ -369,13 +368,13 @@ const UserComponent = () => {
     const usersData = JSON.parse(localStorage.getItem("users_data"));
     if (usersData) {
       const userData = usersData.find((data) => data[0] === username);
-      // console.log(userData);
+      // console.info(userData);
       if (userData) {
         const PRs = userData[1].PRs;
         const issues = userData[1].issues;
         setPRArray(PRs);
         setIssueArray(issues);
-        processData(userData);
+        processData(userData[1]);
         // setUserInfo(userData[1]);
       }
     }
@@ -462,7 +461,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.easy}</span>
                 </p>
                 <p>
                   <svg
@@ -496,7 +495,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.medium}</span>
                 </p>
                 <p>
                   <svg
@@ -530,7 +529,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  {/* <span className={classes.span}>{userInfo.hard}</span> */}
+                  <span className={classes.span}>{userInfo.hard}</span>
                 </p>
                 <p>
                   <svg
@@ -564,7 +563,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{0}</span>
+                  <span className={classes.span}>{userInfo.issue}</span>
                 </p>
               </CardActions>
             </Card>
