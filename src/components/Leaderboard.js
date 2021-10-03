@@ -216,7 +216,7 @@ const Table = () => {
 
     console.log([...userMap.entries()]);
     store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
-
+    localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
     setData([...userMap.entries()]);
   };
 
