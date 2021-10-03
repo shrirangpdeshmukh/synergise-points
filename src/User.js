@@ -4,8 +4,8 @@ import axios from "axios";
 const UserPage = () => {
   const [userInfo, setUserInfo] = useState({
     image: null,
-    PR: 0,
-    issues: 0,
+    // PR: 0,
+    // issues: 0,
     points: 0,
   });
 
@@ -34,7 +34,7 @@ const UserPage = () => {
         console.log(response.data);
 
         const newData = { ...userInfo };
-        newData.PR = response.data.total_count;
+        // newData.PR = response.data.total_count;
 
         if (newData.image === null && response.data.total_count > 0) {
           newData.image = response.data.items[0].user.avatar_url;
@@ -55,7 +55,7 @@ const UserPage = () => {
         console.log(response.data);
 
         const newData = { ...userInfo };
-        newData.issues = response.data.total_count;
+        // newData.issues = response.data.total_count;
 
         if (newData.image === null && response.data.total_count > 0) {
           newData.image = response.data.items[0].user.avatar_url;
@@ -189,10 +189,10 @@ const UserPage = () => {
         <img src={userInfo.image} alt={`${userID}`} />
         <p>Name: {userID}</p>
         <p>Score: {userInfo.points}</p>
-        <p>PR: {userInfo.PR}</p>
-        <p>Issues: {userInfo.issues}</p>
+        <p>PR: {PRArray.length}</p>
+        <p>Issues: {issueArray.length}</p>
 
-        <p>
+        <div>
           <table>
             <thead>
               <tr>
@@ -215,9 +215,9 @@ const UserPage = () => {
               })}
             </tbody>
           </table>
-        </p>
+        </div>
 
-        <p>
+        <div>
           <table>
             <thead>
               <tr>
@@ -238,7 +238,7 @@ const UserPage = () => {
               })}
             </tbody>
           </table>
-        </p>
+        </div>
       </div>
     );
   }
