@@ -111,7 +111,7 @@ const UserComponent = () => {
   //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"`
   //     )
   //     .then((response) => {
-  //       // console.info(response.data);
+  //       // console.log(response.data);
 
   //       const newData = { ...userInfo };
   //       newData.PR = response.data.total_count;
@@ -133,7 +133,7 @@ const UserComponent = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
       )
       .then((response) => {
-        console.info(response.data);
+        console.log(response.data);
         setPRInfo(response.data.items);
       })
       .catch((error) => {
@@ -148,7 +148,7 @@ const UserComponent = () => {
   //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"`
   //     )
   //     .then((response) => {
-  //       // console.info(response.data);
+  //       // console.log(response.data);
 
   //       const newData = { ...userInfo };
   //       newData.issues = response.data.total_count;
@@ -172,7 +172,7 @@ const UserComponent = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
       )
       .then((response) => {
-        console.info(response.data);
+        console.log(response.data);
         setIssueInfo(response.data.items);
       })
       .catch((error) => {
@@ -213,7 +213,7 @@ const UserComponent = () => {
   //       repo: getRepo(PR.repository_url),
   //     });
   //   }
-  //   // console.info(PRs);
+  //   // console.log(PRs);
   //   const result = [...difficultyMap.entries(), score];
 
   //   setPRArray(PRs);
@@ -231,7 +231,7 @@ const UserComponent = () => {
   //       repo: getRepo(issue.repository_url),
   //     });
   //   }
-  //   // console.info(issues);
+  //   // console.log(issues);
   //   setIssueArray(issues);
   //   return score;
   // };
@@ -319,11 +319,11 @@ const UserComponent = () => {
   };
 
   const processData = (currentUser) => {
-    // console.info(currentUser);
+    // console.log(currentUser);
 
     const newData = { ...currentUser };
     const userPrs = newData.PRs;
-    // console.info(userPrs);
+    // console.log(userPrs);
     let diffMap = new Map([
       ["very_easy", 0],
       ["easy", 0],
@@ -338,7 +338,7 @@ const UserComponent = () => {
     newData.medium = diffMap.get("medium");
     newData.hard = diffMap.get("hard");
     newData.very_easy = diffMap.get("very_easy");
-
+    console.log(newData);
     setUserInfo(newData);
   };
 
@@ -347,18 +347,18 @@ const UserComponent = () => {
     processPRs(userMap);
     processIssues(userMap);
 
-    console.info([...userMap.entries()]);
+    console.log([...userMap.entries()]);
     // store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
     localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
 
     const currentUser = userMap.get(username);
-    console.info(currentUser);
+    console.log(currentUser);
     processData(currentUser);
     // setData([...userMap.entries()]);
   };
 
   const getData = (username) => {
-    console.info("axios requests");
+    console.log("axios requests");
     getPRs(username);
     getContributorIssues(username);
   };
@@ -368,7 +368,7 @@ const UserComponent = () => {
     const usersData = JSON.parse(localStorage.getItem("users_data"));
     if (usersData) {
       const userData = usersData.find((data) => data[0] === username);
-      // console.info(userData);
+      // console.log(userData);
       if (userData) {
         const PRs = userData[1].PRs;
         const issues = userData[1].issues;

@@ -1,6 +1,6 @@
 import "./App.css";
 import Leaderboard from "./components/Leaderboard";
-import UserComponent from "./components/UserComponent";
+import UserComponent from "./components/userComponent";
 import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
 
 function App() {
