@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
   },
   align: {
     marginTop: "40px",
+    justifyContent: "center",
   },
   author: {
     fontSize: "20px",
@@ -217,14 +218,14 @@ const UserComponent = () => {
         flexWrap: "wrap",
       }}
     >
-      <Grid container className={classes.align} spacing={1} justify="center">
+      <Grid container className={classes.align} spacing={1}>
         <Grid item lg={4} md={10} xs={12}>
           <Card className={classes.card1}>
             <CardContent id="user-header" style={{ textAlign: "center" }}>
               <Avatar
                 aria-label="recipe"
                 src={userInfo.image}
-                classes={classes.avatar}
+                className={classes.avatar}
               />
               <Typography
                 gutterBottom
@@ -269,7 +270,7 @@ const UserComponent = () => {
               <Typography gutterBottom variant="h5" component="div">
                 {author}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2">
                 Lizards are a widespread group of squamate reptiles, with over
                 6,000 species, ranging across all continents except Antarctica
               </Typography>
