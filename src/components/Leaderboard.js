@@ -1,17 +1,16 @@
 import { React, useState, useEffect } from "react";
 
-import TableComponent from "./components/TableComponent";
+import TableComponent from "./TableComponent";
 
-import store from "./store/reducer";
-import * as boardActions from "./store/boardActions";
+import store from "../store/reducer";
+import * as boardActions from "../store/boardActions";
 import axios from "axios";
 
 const Table = () => {
- 
   const [PRInfo, setPRInfo] = useState(null);
   const [issueInfo, setIssueInfo] = useState(null);
   const [data, setData] = useState(null);
-  
+
   /**
    * GitHub ID : {Image, Score, No.of PRs Merged, No. of Issues Created }
    */
@@ -41,7 +40,10 @@ const Table = () => {
         console.log(response.data);
         setPRInfo(response.data.items);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        loadFromRedux();
+      });
   };
 
   const getContributorIssues = () => {
@@ -53,7 +55,10 @@ const Table = () => {
         console.log(response.data);
         setIssueInfo(response.data.items);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        loadFromRedux();
+      });
   };
 
   const processPRs = (userMap) => {
@@ -178,11 +183,18 @@ const Table = () => {
     getContributorIssues();
   };
 
+  const loadFromRedux = () => {
+    const usersData = store.getState().usersData;
+    if (usersData) {
+      setData(usersData);
+    }
+  };
   useEffect(() => {
     getData();
   }, []);
 
   useEffect(() => {
+    // store.getState().usersData
     if (PRInfo && issueInfo) {
       processData();
     }
