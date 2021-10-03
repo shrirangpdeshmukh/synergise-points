@@ -7,18 +7,13 @@ import * as boardActions from "./store/boardActions";
 import axios from "axios";
 
 const Table = () => {
-  // const [pointsArray, setPointsArray] = useState([]);
+ 
   const [PRInfo, setPRInfo] = useState(null);
   const [issueInfo, setIssueInfo] = useState(null);
-
   const [data, setData] = useState(null);
+  
   /**
-   
-   * GitHub ID : {
-   * Image
-   * Score
-   * No.of PRs Merged
-   * No. of Issues Created}
+   * GitHub ID : {Image, Score, No.of PRs Merged, No. of Issues Created }
    */
 
   const scoreMap = new Map([
@@ -26,6 +21,16 @@ const Table = () => {
     ["syn-medium", 25],
     ["syn-hard", 40],
   ]);
+
+  const getIncrement = (labels) => {
+    for (let label of labels) {
+      if (scoreMap.has(label.name)) {
+        return scoreMap.get(label.name);
+      }
+    }
+
+    return 0;
+  };
 
   const getPRs = () => {
     axios
@@ -51,63 +56,116 @@ const Table = () => {
       .catch((error) => console.error(error));
   };
 
-  const refactorData = () => {
-    const userMap = new Map();
+  const processPRs = (userMap) => {
+    for (let PR of PRInfo) {
+      const increment = getIncrement(PR.labels);
 
-    for (var j = 0; j < PRInfo.length; j++) {
-      if (PRInfo[j].labels.length > 0) {
-        let increment = 0;
-        for (let label of PRInfo[j].labels) {
-          if (scoreMap.has(label.name)) {
-            increment = scoreMap.get(label.name);
-            break;
-          }
-        }
-
-        console.log(increment);
-
-        if (increment > 0) {
-          if (userMap.has(PRInfo[j].user.login)) {
-            const oldData = userMap.get(PRInfo[j].user.login);
-            const newData = { ...oldData };
-            newData.score = newData.score + increment;
-            newData.pr++;
-            userMap.set(PRInfo[j].user.login, newData);
-          } else {
-            const data = {
-              image: PRInfo[j].user.avatar_url,
-              pr: 1,
-              issue: 0,
-              score: increment,
-            };
-            userMap.set(PRInfo[j].user.login, data);
-          }
+      if (increment > 0) {
+        if (userMap.has(PR.user.login)) {
+          const updateData = userMap.get(PR.user.login);
+          updateData.score += increment;
+          updateData.pr++;
+          userMap.set(PR.user.login, updateData);
+        } else {
+          const data = {
+            image: PR.user.avatar_url,
+            pr: 1,
+            issue: 0,
+            score: increment,
+          };
+          userMap.set(PR.user.login, data);
         }
       }
-      // console.log(userMap);
-      // console.log(PRInfo);
     }
+  };
 
-    for (var j = 0; j < issueInfo.length; j++) {
-      if (userMap.has(issueInfo[j].user.login)) {
-        const oldData = userMap.get(issueInfo[j].user.login);
-        const newData = { ...oldData };
-        newData.score = newData.score + 4;
-        newData.issue++;
-        userMap.set(issueInfo[j].user.login, newData);
+  const processIssues = (userMap) => {
+    for (let issue of issueInfo) {
+      if (userMap.has(issue.user.login)) {
+        const updateData = userMap.get(issue.user.login);
+        updateData.score += 4;
+        updateData.issue++;
+        userMap.set(issue.user.login, updateData);
       } else {
         const data = {
-          image: issueInfo[j].user.avatar_url,
+          image: issue.user.avatar_url,
           pr: 0,
           issue: 1,
           score: 4,
         };
-        userMap.set(issueInfo[j].user.login, data);
+        userMap.set(issue.user.login, data);
       }
-
-      // console.log(userMap);
-      // console.log(PRInfo);
     }
+  };
+
+  // const refactorData = () => {
+  //   const userMap = new Map();
+
+  //   for (var j = 0; j < PRInfo.length; j++) {
+  //     if (PRInfo[j].labels.length > 0) {
+  //       let increment = 0;
+  //       for (let label of PRInfo[j].labels) {
+  //         if (scoreMap.has(label.name)) {
+  //           increment = scoreMap.get(label.name);
+  //           break;
+  //         }
+  //       }
+
+  //       console.log(increment);
+
+  //       if (increment > 0) {
+  //         if (userMap.has(PRInfo[j].user.login)) {
+  //           const oldData = userMap.get(PRInfo[j].user.login);
+  //           const newData = { ...oldData };
+  //           newData.score = newData.score + increment;
+  //           newData.pr++;
+  //           userMap.set(PRInfo[j].user.login, newData);
+  //         } else {
+  //           const data = {
+  //             image: PRInfo[j].user.avatar_url,
+  //             pr: 1,
+  //             issue: 0,
+  //             score: increment,
+  //           };
+  //           userMap.set(PRInfo[j].user.login, data);
+  //         }
+  //       }
+  //     }
+  //     // console.log(userMap);
+  //     // console.log(PRInfo);
+  //   }
+
+  //   for (var j = 0; j < issueInfo.length; j++) {
+  //     if (userMap.has(issueInfo[j].user.login)) {
+  //       const oldData = userMap.get(issueInfo[j].user.login);
+  //       const newData = { ...oldData };
+  //       newData.score = newData.score + 4;
+  //       newData.issue++;
+  //       userMap.set(issueInfo[j].user.login, newData);
+  //     } else {
+  //       const data = {
+  //         image: issueInfo[j].user.avatar_url,
+  //         pr: 0,
+  //         issue: 1,
+  //         score: 4,
+  //       };
+  //       userMap.set(issueInfo[j].user.login, data);
+  //     }
+
+  //     // console.log(userMap);
+  //     // console.log(PRInfo);
+  //   }
+
+  //   console.log([...userMap.entries()]);
+  //   store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
+
+  //   setData([...userMap.entries()]);
+  // };
+
+  const processData = () => {
+    const userMap = new Map();
+    processPRs(userMap);
+    processIssues(userMap);
 
     console.log([...userMap.entries()]);
     store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
@@ -126,7 +184,7 @@ const Table = () => {
 
   useEffect(() => {
     if (PRInfo && issueInfo) {
-      refactorData();
+      processData();
     }
   }, [PRInfo, issueInfo]);
 
