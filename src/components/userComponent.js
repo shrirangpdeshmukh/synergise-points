@@ -2,7 +2,7 @@ import {
   Avatar,
   makeStyles,
   Card,
-  CardHeader,
+  // CardHeader,
   CardActions,
   Typography,
   CardContent,
@@ -13,7 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserComponent.css";
-import store from "../store/reducer";
+import processPRs from "./processPRs";
+import processIssues from "./processIssues";
+
+// import store from "../store/reducer";
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -85,8 +88,9 @@ const UserComponent = () => {
   const [userInfo, setUserInfo] = useState({
     image: null,
     PR: 0,
-    issues: 0,
-    points: 0,
+    issue: 0,
+    score: 0,
+    diff: [0, 0, 0, 0],
   });
 
   const [loading, setLoading] = useState(true);
@@ -97,36 +101,6 @@ const UserComponent = () => {
   const [PRInfo, setPRInfo] = useState(null);
   const [issueInfo, setIssueInfo] = useState(null);
 
-  const userID = "MintuJupally";
-
-  const scoreMap = new Map([
-    ["syn-easy", 10],
-    ["syn-medium", 25],
-    ["syn-hard", 40],
-  ]);
-
-  // const getPRs = (userID) => {
-  //   axios
-  //     .get(
-  //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"`
-  //     )
-  //     .then((response) => {
-  //       // console.log(response.data);
-
-  //       const newData = { ...userInfo };
-  //       newData.PR = response.data.total_count;
-  //       if (newData.image === null && response.data.total_count > 0) {
-  //         newData.image = response.data.items[0].user.avatar_url;
-  //       }
-
-  //       setUserInfo(newData);
-  //       setPRInfo(response.data.items);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       // loadDataFromRedux(userID);
-  //     });
-  // };
   const getPRs = () => {
     axios
       .get(
@@ -138,33 +112,8 @@ const UserComponent = () => {
       })
       .catch((error) => {
         console.error(error);
-        // loadFromRedux();
       });
   };
-
-  // const getContributorIssues = (userID) => {
-  //   axios
-  //     .get(
-  //       `https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"`
-  //     )
-  //     .then((response) => {
-  //       // console.log(response.data);
-
-  //       const newData = { ...userInfo };
-  //       newData.issues = response.data.total_count;
-
-  //       if (newData.image === null && response.data.total_count > 0) {
-  //         newData.image = response.data.items[0].user.avatar_url;
-  //       }
-
-  //       setUserInfo(newData);
-  //       setIssueInfo(response.data.items);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       // loadDataFromRedux(userID);
-  //     });
-  // };
 
   const getContributorIssues = () => {
     axios
@@ -177,184 +126,24 @@ const UserComponent = () => {
       })
       .catch((error) => {
         console.error(error);
-        // loadFromRedux();
       });
-  };
-  const getRepo = (url) => {
-    return url.split("/")[url.split("/").length - 1];
-  };
-
-  const getDifficulty = (labels) => {
-    for (let label of labels) {
-      if (scoreMap.has(label.name)) {
-        return label.name;
-      }
-    }
-  };
-
-  // const processPRs = () => {
-  //   let score = 0;
-  //   let difficultyMap = new Map([
-  //     ["syn-easy", 0],
-  //     ["syn-medium", 0],
-  //     ["syn-hard", 0],
-  //   ]);
-
-  //   const PRs = [];
-  //   for (let PR of PRInfo) {
-  //     const difficulty = getDifficulty(PR.labels);
-  //     score += scoreMap.get(difficulty);
-  //     difficultyMap.set(difficulty, difficultyMap.get(difficulty) + 1);
-
-  //     PRs.push({
-  //       link: PR.html_url,
-  //       title: PR.title,
-  //       difficulty: difficulty.split("-")[1],
-  //       repo: getRepo(PR.repository_url),
-  //     });
-  //   }
-  //   // console.log(PRs);
-  //   const result = [...difficultyMap.entries(), score];
-
-  //   setPRArray(PRs);
-  //   return result;
-  // };
-
-  // const processIssues = () => {
-  //   let score = 0;
-  //   const issues = [];
-  //   for (let issue of issueInfo) {
-  //     score += 4;
-  //     issues.push({
-  //       link: issue.html_url,
-  //       title: issue.title,
-  //       repo: getRepo(issue.repository_url),
-  //     });
-  //   }
-  //   // console.log(issues);
-  //   setIssueArray(issues);
-  //   return score;
-  // };
-
-  const getIncrement = (labels) => {
-    for (let label of labels) {
-      if (scoreMap.has(label.name)) {
-        return scoreMap.get(label.name);
-      }
-    }
-
-    return 0;
-  };
-
-  const processPRs = (userMap) => {
-    for (let PR of PRInfo) {
-      const increment = getIncrement(PR.labels);
-      const difficulty = getDifficulty(PR.labels);
-
-      if (increment > 0) {
-        if (userMap.has(PR.user.login)) {
-          const updateData = userMap.get(PR.user.login);
-          updateData.score += increment;
-          updateData.pr++;
-          updateData.PRs.push({
-            link: PR.html_url,
-            title: PR.title,
-            difficulty: difficulty.split("-")[1],
-            repo: getRepo(PR.repository_url),
-          });
-
-          userMap.set(PR.user.login, updateData);
-        } else {
-          const data = {
-            image: PR.user.avatar_url,
-            pr: 1,
-            issue: 0,
-            score: increment,
-            PRs: [
-              {
-                link: PR.html_url,
-                title: PR.title,
-                difficulty: difficulty.split("-")[1],
-                repo: getRepo(PR.repository_url),
-              },
-            ],
-            issues: [],
-          };
-          userMap.set(PR.user.login, data);
-        }
-      }
-    }
-  };
-
-  const processIssues = (userMap) => {
-    for (let issue of issueInfo) {
-      if (userMap.has(issue.user.login)) {
-        const updateData = userMap.get(issue.user.login);
-        updateData.score += 4;
-        updateData.issue++;
-        updateData.issues.push({
-          link: issue.html_url,
-          title: issue.title,
-          repo: getRepo(issue.repository_url),
-        });
-        userMap.set(issue.user.login, updateData);
-      } else {
-        const data = {
-          image: issue.user.avatar_url,
-          pr: 0,
-          issue: 1,
-          score: 4,
-          issues: [
-            {
-              link: issue.html_url,
-              title: issue.title,
-              repo: getRepo(issue.repository_url),
-            },
-          ],
-          PRs: [],
-        };
-        userMap.set(issue.user.login, data);
-      }
-    }
-  };
-
-  const processData = (currentUser) => {
-    // console.log(currentUser);
-
-    const newData = { ...currentUser };
-    const userPrs = newData.PRs;
-    // console.log(userPrs);
-    let diffMap = new Map([
-      ["very_easy", 0],
-      ["easy", 0],
-      ["medium", 0],
-      ["hard", 0],
-    ]);
-
-    for (let PR of userPrs) {
-      diffMap.set(PR.difficulty, diffMap.get(PR.difficulty) + 1);
-    }
-    newData.easy = diffMap.get("easy");
-    newData.medium = diffMap.get("medium");
-    newData.hard = diffMap.get("hard");
-    newData.very_easy = diffMap.get("very_easy");
-    console.log(newData);
-    setUserInfo(newData);
   };
 
   const processUsersData = () => {
     const userMap = new Map();
-    processPRs(userMap);
-    processIssues(userMap);
+    processPRs(userMap, PRInfo);
+    processIssues(userMap, issueInfo);
 
     console.log([...userMap.entries()]);
-    // store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
+
     localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
+
+    console.log("PrcoessUserData");
+    console.log([...userMap.entries()]);
 
     const currentUser = userMap.get(username);
     console.log(currentUser);
-    processData(currentUser);
-    // setData([...userMap.entries()]);
+    setUserInfo(currentUser);
   };
 
   const getData = (username) => {
@@ -363,19 +152,23 @@ const UserComponent = () => {
     getContributorIssues(username);
   };
 
-  const loadDataFromRedux = (username) => {
-    // const usersData = store.getState().usersData;
+  const loadDataFromStorage = (username) => {
     const usersData = JSON.parse(localStorage.getItem("users_data"));
     if (usersData) {
       const userData = usersData.find((data) => data[0] === username);
-      // console.log(userData);
+
+      console.log("Loading user data");
+      console.log(userData);
+
       if (userData) {
         const PRs = userData[1].PRs;
         const issues = userData[1].issues;
+
+        console.log(usersData[1]);
+
         setPRArray(PRs);
         setIssueArray(issues);
-        processData(userData[1]);
-        // setUserInfo(userData[1]);
+        setUserInfo(userData[1]);
       }
     }
     setLoading(false);
@@ -384,13 +177,11 @@ const UserComponent = () => {
 
   useEffect(() => {
     setAuthor(username);
-    // getData(username);
-    loadDataFromRedux(username);
+    loadDataFromStorage(username);
   }, []);
 
   useEffect(() => {
     if (PRInfo && issueInfo) {
-      // refactorData();
       processUsersData();
     }
   }, [PRInfo, issueInfo]);
@@ -461,7 +252,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{userInfo.easy}</span>
+                  <span className={classes.span}>{userInfo.diff[1]}</span>
                 </p>
                 <p>
                   <svg
@@ -495,7 +286,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{userInfo.medium}</span>
+                  <span className={classes.span}>{userInfo.diff[2]}</span>
                 </p>
                 <p>
                   <svg
@@ -529,7 +320,7 @@ const UserComponent = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className={classes.span}>{userInfo.hard}</span>
+                  <span className={classes.span}>{userInfo.diff[3]}</span>
                 </p>
                 <p>
                   <svg
@@ -583,6 +374,54 @@ const UserComponent = () => {
                   Lizards are a widespread group of squamate reptiles, with over
                   6,000 species, ranging across all continents except Antarctica
                 </Typography>
+
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Repository</th>
+                        <th>Title</th>
+                        <th>Link</th>
+                        <th>difficulty</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {PRArray.map((PR) => {
+                        return (
+                          <tr key={PR.link}>
+                            <td>{PR.repo}</td>
+                            <td>{PR.title}</td>
+                            <td>{PR.link}</td>
+                            <td>{PR.difficulty}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Repository</th>
+                        <th>Title</th>
+                        <th>Link</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {issueArray.map((issue) => {
+                        return (
+                          <tr key={issue.link}>
+                            <td>{issue.repo}</td>
+                            <td>{issue.title}</td>
+                            <td>{issue.link}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </CardContent>
               <CardActions>
                 <Button size="small">Share</Button>
