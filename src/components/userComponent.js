@@ -86,7 +86,8 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     fontWeight: "600",
-    marginLeft: "5px",
+    textAlign: "left",
+    fontSize: "17px",
   },
 }));
 
@@ -205,6 +206,26 @@ const UserComponent = () => {
     window.open(link);
   };
 
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const getDate = (dt) => {
+    let date = new Date(dt);
+    return months[date.getMonth()] + " " + date.getDate();
+  };
+
   const cardContent = (PR, ind) => {
     let chipColor = "#2ECC71";
     if (PR.difficulty === "medium") chipColor = "#F1C40F";
@@ -240,8 +261,11 @@ const UserComponent = () => {
             </Grid>
             <Grid style={{ margin: "0px 10px" }}>
               <Typography className={classes.title}>{PR.title}</Typography>
-              <Typography noWrap style={{ fontSize: "14px" }}>
-                {new Date(PR.time).toLocaleDateString()}
+              <Typography
+                noWrap
+                style={{ textAlign: "left", fontSize: "14px" }}
+              >
+                {getDate(PR.time)}
               </Typography>
             </Grid>
             <Grid item xs style={{ display: "flex" }}>
@@ -332,8 +356,11 @@ const UserComponent = () => {
             </Grid>
             <Grid style={{ margin: "0px 10px" }}>
               <Typography className={classes.title}>{issue.title}</Typography>
-              <Typography noWrap style={{ fontSize: "14px" }}>
-                {new Date(issue.time).toLocaleDateString()}
+              <Typography
+                noWrap
+                style={{ textAlign: "left", fontSize: "14px" }}
+              >
+                {getDate(issue.time)}
               </Typography>
             </Grid>
             <Grid
