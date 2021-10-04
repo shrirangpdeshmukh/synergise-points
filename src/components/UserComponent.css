@@ -21,3 +21,25 @@
   transition: all 0.2s;
   margin: 10px;
 }
+
+#popup {
+  opacity: 0;
+  transition: 0.2s;
+}
+
+#paper div{
+  transition: 0.2s;
+  cursor: default;
+}
+
+#paper div:hover{
+  background-color: rgb(240,240,240);
+}
+
+#paper:hover div div div #popup {
+  opacity: 1;
+}
+
+#pop-div{
+  flex-grow: unset;
+}

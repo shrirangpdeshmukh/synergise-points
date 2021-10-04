@@ -32,7 +32,7 @@ const processIssues = (userMap, issueInfo) => {
           },
         ],
         PRs: [],
-        diff: [],
+        diff: [1, 0, 0, 0],
       };
       userMap.set(issue.user.login, data);
     }

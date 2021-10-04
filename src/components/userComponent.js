@@ -79,9 +79,10 @@ const useStyles = makeStyles(() => ({
   },
   span: {
     position: "relative",
-    bottom: "6px",
+    bottom: "0",
     left: "2px",
     fontWeight: "500",
+    fontSize: 22,
   },
   title: {
     fontWeight: "600",
@@ -179,6 +180,8 @@ const UserComponent = () => {
 
         setPRArray(PRs);
         setIssueArray(issues);
+        console.log("this one");
+        console.log(userData[1]);
         setUserInfo(userData[1]);
       }
     }
@@ -199,7 +202,7 @@ const UserComponent = () => {
 
   const redirectTo = (link) => {
     // history.replace(link);
-    window.location.href = link;
+    window.open(link);
   };
 
   const cardContent = (PR, ind) => {
@@ -208,20 +211,25 @@ const UserComponent = () => {
     else if (PR.difficulty === "hard") chipColor = "#E74C3C";
 
     return (
-      <div id="paper">
+      <div id="paper" key={ind}>
         <Paper
           className={classes.paper}
-          key={ind}
           // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
         >
           <Grid container wrap="nowrap" spacing={2}>
-            <Grid item style={{ marginRight: "5px" }}>
+            <Grid
+              item
+              style={{
+                alignItems: "center",
+                display: "flex",
+              }}
+            >
               <svg
                 aria-hidden="true"
-                height="16"
                 viewBox="0 0 16 16"
                 version="1.1"
-                width="16"
+                height="25"
+                width="25"
                 data-view-component="true"
               >
                 <path
@@ -230,17 +238,13 @@ const UserComponent = () => {
                 ></path>
               </svg>
             </Grid>
-            <Grid>
+            <Grid style={{ margin: "0px 10px" }}>
               <Typography className={classes.title}>{PR.title}</Typography>
               <Typography noWrap style={{ fontSize: "14px" }}>
                 {new Date(PR.time).toLocaleDateString()}
               </Typography>
             </Grid>
-            <Grid
-              item
-              xs
-              style={{ display: "flex", justifyContent: "space-evenly" }}
-            >
+            <Grid item xs style={{ display: "flex" }}>
               <Chip
                 label={PR.repo}
                 variant="outlined"
@@ -255,18 +259,27 @@ const UserComponent = () => {
                 style={{ backgroundColor: chipColor, color: "white" }}
               />
             </Grid>
-            <Grid item xs style={{ right: "10px", textAlign: "right" }}>
+            <Grid
+              item
+              id="pop-div"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <SvgIcon
-                style={{ cursor: "pointer" }}
+                id="popup"
+                style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
                 onClick={() => redirectTo(PR.link)}
+                viewBox="0 0 18 18"
               >
                 <svg
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
-                  class="css-13o7eu2"
                 >
                   <path
                     d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
@@ -276,7 +289,7 @@ const UserComponent = () => {
                     d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
                     fill="currentColor"
                   ></path>
-                </svg>{" "}
+                </svg>
               </SvgIcon>
             </Grid>
           </Grid>
@@ -288,20 +301,25 @@ const UserComponent = () => {
   const issueContent = (issue, ind) => {
     console.log(issue);
     return (
-      <div id="paper">
+      <div id="paper" key={ind}>
         <Paper
           className={classes.paper}
-          key={ind}
           // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
         >
           <Grid container wrap="nowrap" spacing={2}>
-            <Grid item style={{ marginRight: "5px" }}>
+            <Grid
+              item
+              style={{
+                alignItems: "center",
+                display: "flex",
+              }}
+            >
               <svg
                 aria-hidden="true"
-                height="15"
                 viewBox="0 0 16 16"
                 version="1.1"
-                width="15"
+                height="24"
+                width="24"
                 data-view-component="true"
                 style={{ transform: "translate(0px,1px)" }}
               >
@@ -312,7 +330,7 @@ const UserComponent = () => {
                 ></path>
               </svg>
             </Grid>
-            <Grid>
+            <Grid style={{ margin: "0px 10px" }}>
               <Typography className={classes.title}>{issue.title}</Typography>
               <Typography noWrap style={{ fontSize: "14px" }}>
                 {new Date(issue.time).toLocaleDateString()}
@@ -321,7 +339,7 @@ const UserComponent = () => {
             <Grid
               item
               xs
-              style={{ display: "flex", justifyContent: "space-evenly" }}
+              style={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Chip
                 label={issue.repo}
@@ -331,18 +349,27 @@ const UserComponent = () => {
                 onClick={() => redirectTo(issue.repoLink)}
               />
             </Grid>
-            <Grid item xs style={{ right: "10px", textAlign: "right" }}>
+            <Grid
+              item
+              id="pop-div"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <SvgIcon
-                style={{ cursor: "pointer" }}
-                onClick={() => (window.location.href = issue.link)}
+                id="popup"
+                style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
+                onClick={() => redirectTo(issue.link)}
+                viewBox="0 0 18 18"
               >
                 <svg
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
-                  class="css-13o7eu2"
                 >
                   <path
                     d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
@@ -352,7 +379,7 @@ const UserComponent = () => {
                     d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
                     fill="currentColor"
                   ></path>
-                </svg>{" "}
+                </svg>
               </SvgIcon>
             </Grid>
           </Grid>
@@ -360,6 +387,7 @@ const UserComponent = () => {
       </div>
     );
   };
+
   return (
     <div
       style={{
@@ -370,7 +398,7 @@ const UserComponent = () => {
     >
       {!loading ? (
         <Grid container className={classes.align}>
-          <Grid item lg={4} md={10} xs={12} style={{ marginRight: "10px" }}>
+          <Grid item lg={4} md={10} xs={12} style={{ margin: "10px" }}>
             <Card className={classes.card1}>
               <CardContent id="user-header" style={{ textAlign: "center" }}>
                 <Avatar
@@ -385,23 +413,39 @@ const UserComponent = () => {
                 >
                   {author}
                 </Typography>
-                <Chip
+                {/* <Chip
                   label={`Points achieved ${userInfo.score}`}
                   variant="outlined"
                   className={classes.chip}
-                />
+                /> */}
+                <div>
+                  <b
+                    style={{
+                      fontSize: 40,
+                      fontWeight: 500,
+                      color: "lightblue",
+                    }}
+                  >
+                    {userInfo.score}
+                  </b>
+                  /score
+                </div>
               </CardContent>
               <CardActions
-                style={{ display: "flex", justifyContent: "space-evenly" }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  marginBottom: "20px",
+                }}
               >
                 <Tooltip title="easy" placement="top">
-                  <p>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       x="0px"
                       y="0px"
-                      width={24}
-                      height={24}
+                      width={30}
+                      height={30}
                       viewBox="0 0 172 172"
                       style={{ fill: "#000000" }}
                     >
@@ -413,7 +457,7 @@ const UserComponent = () => {
                         strokeLinecap="butt"
                         strokeLinejoin="miter"
                         strokeMiterlimit={10}
-                        strokeDasharray
+                        strokeDasharray="true"
                         strokeDashoffset={0}
                         fontFamily="none"
                         fontWeight="none"
@@ -428,16 +472,16 @@ const UserComponent = () => {
                       </g>
                     </svg>
                     <span className={classes.span}>{userInfo.diff[1]}</span>
-                  </p>
+                  </div>
                 </Tooltip>
                 <Tooltip title="medium" placement="top">
-                  <p>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       x="0px"
                       y="0px"
-                      width={24}
-                      height={24}
+                      width={30}
+                      height={30}
                       viewBox="0 0 172 172"
                       style={{ fill: "#000000" }}
                     >
@@ -449,7 +493,7 @@ const UserComponent = () => {
                         strokeLinecap="butt"
                         strokeLinejoin="miter"
                         strokeMiterlimit={10}
-                        strokeDasharray
+                        strokeDasharray="true"
                         strokeDashoffset={0}
                         fontFamily="none"
                         fontWeight="none"
@@ -464,16 +508,16 @@ const UserComponent = () => {
                       </g>
                     </svg>
                     <span className={classes.span}>{userInfo.diff[2]}</span>
-                  </p>
+                  </div>
                 </Tooltip>
                 <Tooltip title="hard" placement="top">
-                  <p>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       x="0px"
                       y="0px"
-                      width={24}
-                      height={24}
+                      width={30}
+                      height={30}
                       viewBox="0 0 172 172"
                       style={{ fill: "#000000" }}
                     >
@@ -485,7 +529,7 @@ const UserComponent = () => {
                         strokeLinecap="butt"
                         strokeLinejoin="miter"
                         strokeMiterlimit={10}
-                        strokeDasharray
+                        strokeDasharray="true"
                         strokeDashoffset={0}
                         fontFamily="none"
                         fontWeight="none"
@@ -500,16 +544,16 @@ const UserComponent = () => {
                       </g>
                     </svg>
                     <span className={classes.span}>{userInfo.diff[3]}</span>
-                  </p>
+                  </div>
                 </Tooltip>
                 <Tooltip title="issues" placement="top">
-                  <p>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       x="0px"
                       y="0px"
-                      width={24}
-                      height={24}
+                      width={30}
+                      height={30}
                       viewBox="0 0 172 172"
                       style={{ fill: "#000000" }}
                     >
@@ -521,7 +565,7 @@ const UserComponent = () => {
                         strokeLinecap="butt"
                         strokeLinejoin="miter"
                         strokeMiterlimit={10}
-                        strokeDasharray
+                        strokeDasharray="true"
                         strokeDashoffset={0}
                         fontFamily="none"
                         fontWeight="none"
@@ -536,13 +580,18 @@ const UserComponent = () => {
                       </g>
                     </svg>
                     <span className={classes.span}>{userInfo.issue}</span>
-                  </p>
+                  </div>
                 </Tooltip>
               </CardActions>
             </Card>
           </Grid>
-          <Grid item lg={6} md={10} xs={12}>
-            <Card style={{ backgroundColor: "#FFFFFF" }}>
+          <Grid item lg={6} md={10} xs={12} style={{ margin: "10px" }}>
+            <Card
+              style={{
+                backgroundColor: "#FFFFFF",
+                boxShadow: "0px 0px 5px 5px rgb(0,0,0,0.05) ",
+              }}
+            >
               <CardContent id="user-header" style={{ textAlign: "center" }}>
                 {/* <Avatar
                 aria-label="recipe"
