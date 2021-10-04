@@ -1,4 +1,4 @@
-import { getRepo } from "./utility";
+import { getRepo, getRepoLink } from "./utility";
 
 const issuePoints = 4;
 
@@ -11,7 +11,9 @@ const processIssues = (userMap, issueInfo) => {
       updateData.issues.push({
         link: issue.html_url,
         title: issue.title,
+        repoLink: getRepoLink(issue.repository_url),
         repo: getRepo(issue.repository_url),
+        time: issue.created_at,
       });
       userMap.set(issue.user.login, updateData);
     } else {
@@ -24,7 +26,9 @@ const processIssues = (userMap, issueInfo) => {
           {
             link: issue.html_url,
             title: issue.title,
+            repoLink: getRepoLink(issue.repository_url),
             repo: getRepo(issue.repository_url),
+            time: issue.created_at,
           },
         ],
         PRs: [],

@@ -9,6 +9,12 @@ export const getRepo = (url) => {
   return url.split("/")[url.split("/").length - 1];
 };
 
+export const getRepoLink = (url) => {
+  let repo = "https://github.com/";
+  url = url.split("/");
+  repo += url[url.length - 2] + "/" + url[url.length - 1];
+  return repo;
+};
 export const getDifficulty = (labels) => {
   for (let label of labels) {
     if (scoreMap.has(label.name)) {

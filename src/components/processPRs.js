@@ -1,4 +1,4 @@
-import { getIncrement, getDifficulty, getRepo } from "./utility";
+import { getIncrement, getDifficulty, getRepo, getRepoLink } from "./utility";
 
 const indexMap = new Map([
   ["syn-very-easy", 0],
@@ -21,7 +21,9 @@ const processPRs = (userMap, PRInfo) => {
           link: PR.html_url,
           title: PR.title,
           difficulty: difficulty.split("-")[1],
+          repoLink: getRepoLink(PR.repository_url),
           repo: getRepo(PR.repository_url),
+          time: PR.closed_at,
         });
         updateData.diff[indexMap.get(difficulty)]++;
 
@@ -40,7 +42,9 @@ const processPRs = (userMap, PRInfo) => {
               link: PR.html_url,
               title: PR.title,
               difficulty: difficulty.split("-")[1],
+              repoLink: getRepoLink(PR.repository_url),
               repo: getRepo(PR.repository_url),
+              time: PR.closed_at,
             },
           ],
           issues: [],
