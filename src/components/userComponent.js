@@ -184,7 +184,7 @@ const UserComponent = () => {
         console.log("this one");
         console.log(userData[1]);
         setUserInfo(userData[1]);
-      }
+      } else history.replace("/");
     }
     setLoading(false);
     getData(username);

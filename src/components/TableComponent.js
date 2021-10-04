@@ -48,12 +48,12 @@ const TableComponent = ({ data }) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        paddingTop: "50px",
+        paddingTop: "20px",
         flexDirection: "column",
       }}
     >
       <div>
-        <h2
+        <h1
           style={{
             display: "flex",
             justifyContent: "center",
@@ -62,7 +62,7 @@ const TableComponent = ({ data }) => {
         >
           <div>Leaderboard </div>
           <div className={classes.chip}>live</div>
-        </h2>
+        </h1>
       </div>
       <div style={{ margin: "auto" }}>
         <table className={classes.table}>

@@ -29,7 +29,6 @@ const Table = () => {
       })
       .catch((error) => {
         console.error(error);
-        loadFromRedux();
       });
   };
 
@@ -44,7 +43,6 @@ const Table = () => {
       })
       .catch((error) => {
         console.error(error);
-        loadFromRedux();
       });
   };
 
@@ -64,14 +62,19 @@ const Table = () => {
     getContributorIssues();
   };
 
-  const loadFromRedux = () => {
-    const usersData = store.getState().usersData;
+  const loadFromStorage = () => {
+    // const usersData = store.getState().usersData;
+    const usersData = JSON.parse(localStorage.getItem("users_data"));
     if (usersData) {
       setData(usersData);
     }
-  };
-  useEffect(() => {
+
     getData();
+  };
+
+  useEffect(() => {
+    // getData();
+    loadFromStorage();
   }, []);
 
   useEffect(() => {
