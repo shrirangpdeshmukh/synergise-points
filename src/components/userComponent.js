@@ -369,8 +369,8 @@ const UserComponent = () => {
       }}
     >
       {!loading ? (
-        <Grid container className={classes.align} spacing={1}>
-          <Grid item lg={4} md={10} xs={12}>
+        <Grid container className={classes.align}>
+          <Grid item lg={4} md={10} xs={12} style={{ marginRight: "10px" }}>
             <Card className={classes.card1}>
               <CardContent id="user-header" style={{ textAlign: "center" }}>
                 <Avatar
