@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { React, useState } from "react";
 import { Avatar, TextField, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
@@ -29,6 +29,8 @@ const useStyles = makeStyles(() => ({
   cell: {
     border: "0px",
     padding: "10px 0px",
+    // wordBreak: "keep-all",
+    // whiteSpace: "nowrap",
   },
   table: {
     width: "90vw",
@@ -63,7 +65,7 @@ const TableComponent = ({ data }) => {
       const curr = pos;
       pos = pos + piece.length + searchString.length;
       return (
-        <>
+        <span key={`${name}-${index}`}>
           {name.substr(curr, piece.length)}
           {index !== pieces.length - 1 ? (
             <b style={{ backgroundColor: "lightblue", fontWeight: 500 }}>
@@ -72,7 +74,7 @@ const TableComponent = ({ data }) => {
           ) : (
             ""
           )}
-        </>
+        </span>
       );
     });
   };
@@ -123,10 +125,12 @@ const TableComponent = ({ data }) => {
               ) {
                 if (index === data.length - 1 && results === 0) {
                   return (
-                    <tr>
-                      <div style={{ fontSize: "22px" }}>
-                        No results ... 🚶🚶🚶
-                      </div>
+                    <tr key={"no-results"}>
+                      <td>
+                        <p style={{ fontSize: "22px" }}>
+                          No results ... 🚶🚶🚶
+                        </p>
+                      </td>
                     </tr>
                   );
                 }
