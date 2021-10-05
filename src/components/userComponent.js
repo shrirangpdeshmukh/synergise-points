@@ -16,6 +16,7 @@ import "./UserComponent.css";
 
 import processPRs from "./processPRs";
 import processIssues from "./processIssues";
+import { PRAPI, issueAPI } from "./APICalls";
 // import store from "../store/reducer";
 
 import axios from "axios";
@@ -357,9 +358,7 @@ const UserComponent = () => {
 
   const getPRs = () => {
     axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
-      )
+      .get(PRAPI)
       .then((response) => {
         // console.log(response.data);
         setPRInfo(response.data.items);
@@ -371,9 +370,7 @@ const UserComponent = () => {
 
   const getContributorIssues = () => {
     axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
-      )
+      .get(issueAPI)
       .then((response) => {
         // console.log(response.data);
         setIssueInfo(response.data.items);

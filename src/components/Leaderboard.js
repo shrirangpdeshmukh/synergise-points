@@ -2,12 +2,11 @@ import { React, useState, useEffect } from "react";
 
 import TableComponent from "./TableComponent";
 
-import store from "../store/reducer";
-import * as boardActions from "../store/boardActions";
 import axios from "axios";
 
 import processPRs from "./processPRs";
 import processIssues from "./processIssues";
+import { PRAPI, issueAPI } from "./APICalls";
 
 const Table = () => {
   const [PRInfo, setPRInfo] = useState(null);
@@ -20,9 +19,7 @@ const Table = () => {
 
   const getPRs = () => {
     axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
-      )
+      .get(PRAPI)
       .then((response) => {
         // console.log(response.data);
         setPRInfo(response.data.items);
@@ -34,9 +31,7 @@ const Table = () => {
 
   const getContributorIssues = () => {
     axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
-      )
+      .get(issueAPI)
       .then((response) => {
         // console.log(response.data);
         setIssueInfo(response.data.items);
