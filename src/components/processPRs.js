@@ -1,7 +1,7 @@
 import { getIncrement, getDifficulty, getRepo, getRepoLink } from "./utility";
 
 const indexMap = new Map([
-  ["syn-very-easy", 0],
+  ["syn-beginner", 0],
   ["syn-easy", 1],
   ["syn-medium", 2],
   ["syn-hard", 3],

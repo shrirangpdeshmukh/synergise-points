@@ -1,5 +1,5 @@
 const scoreMap = new Map([
-  ["syn-very-easy", 5],
+  ["syn-beginner", 5],
   ["syn-easy", 10],
   ["syn-medium", 25],
   ["syn-hard", 40],
