@@ -24,7 +24,7 @@ const Table = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setPRInfo(response.data.items);
       })
       .catch((error) => {
@@ -38,7 +38,7 @@ const Table = () => {
         'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setIssueInfo(response.data.items);
       })
       .catch((error) => {
@@ -51,8 +51,8 @@ const Table = () => {
     processPRs(userMap, PRInfo);
     processIssues(userMap, issueInfo);
 
-    console.log([...userMap.entries()]);
-    store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
+    // console.log([...userMap.entries()]);
+    // store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
     localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
     setData([...userMap.entries()]);
   };

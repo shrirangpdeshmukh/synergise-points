@@ -1,25 +1,25 @@
+import { useEffect, useState } from "react";
 import {
   Avatar,
   makeStyles,
   Card,
-  // CardHeader,
   CardActions,
   Typography,
   CardContent,
-  Button,
   Grid,
   Chip,
   Paper,
   SvgIcon,
   Tooltip,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import "./UserComponent.css";
+
 import processPRs from "./processPRs";
 import processIssues from "./processIssues";
-import { useHistory } from "react-router-dom";
 // import store from "../store/reducer";
+
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -46,7 +46,6 @@ const useStyles = makeStyles(() => ({
     height: "50px",
   },
   align: {
-    marginTop: "40px",
     justifyContent: "center",
   },
   author: {
@@ -91,153 +90,45 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const UserComponent = () => {
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const getDate = (dt) => {
+  let date = new Date(dt);
+  return months[date.getMonth()] + " " + date.getDate();
+};
+
+const redirectTo = (link) => {
+  window.open(link);
+};
+
+const PRContent = (PR, ind) => {
   const classes = useStyles();
-  const history = useHistory();
 
-  const url = window.location.pathname;
-  const username = url.split("/")[2];
-  const [author, setAuthor] = useState("");
-  const [userInfo, setUserInfo] = useState({
-    image: null,
-    PR: 0,
-    issue: 0,
-    score: 0,
-    diff: [0, 0, 0, 0],
-  });
+  let chipColor = "#2ECC71";
+  if (PR.difficulty === "medium") chipColor = "#F1C40F";
+  else if (PR.difficulty === "hard") chipColor = "#E74C3C";
 
-  const [loading, setLoading] = useState(true);
-
-  const [PRArray, setPRArray] = useState([]);
-  const [issueArray, setIssueArray] = useState([]);
-
-  const [PRInfo, setPRInfo] = useState(null);
-  const [issueInfo, setIssueInfo] = useState(null);
-
-  const getPRs = () => {
-    axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
-      )
-      .then((response) => {
-        console.log(response.data);
-        setPRInfo(response.data.items);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const getContributorIssues = () => {
-    axios
-      .get(
-        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
-      )
-      .then((response) => {
-        console.log(response.data);
-        setIssueInfo(response.data.items);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const processUsersData = () => {
-    const userMap = new Map();
-    processPRs(userMap, PRInfo);
-    processIssues(userMap, issueInfo);
-
-    console.log([...userMap.entries()]);
-
-    localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
-
-    console.log("PrcoessUserData");
-    console.log([...userMap.entries()]);
-
-    const currentUser = userMap.get(username);
-    console.log(currentUser);
-    setUserInfo(currentUser);
-  };
-
-  const getData = (username) => {
-    console.log("axios requests");
-    getPRs(username);
-    getContributorIssues(username);
-  };
-
-  const loadDataFromStorage = (username) => {
-    const usersData = JSON.parse(localStorage.getItem("users_data"));
-    if (usersData) {
-      const userData = usersData.find((data) => data[0] === username);
-
-      console.log("Loading user data");
-      console.log(userData);
-
-      if (userData) {
-        const PRs = userData[1].PRs;
-        const issues = userData[1].issues;
-
-        console.log(usersData[1]);
-
-        setPRArray(PRs);
-        setIssueArray(issues);
-        console.log("this one");
-        console.log(userData[1]);
-        setUserInfo(userData[1]);
-      } else history.replace("/");
-    }
-    setLoading(false);
-    getData(username);
-  };
-
-  useEffect(() => {
-    setAuthor(username);
-    loadDataFromStorage(username);
-  }, []);
-
-  useEffect(() => {
-    if (PRInfo && issueInfo) {
-      processUsersData();
-    }
-  }, [PRInfo, issueInfo]);
-
-  const redirectTo = (link) => {
-    // history.replace(link);
-    window.open(link);
-  };
-
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const getDate = (dt) => {
-    let date = new Date(dt);
-    return months[date.getMonth()] + " " + date.getDate();
-  };
-
-  const cardContent = (PR, ind) => {
-    let chipColor = "#2ECC71";
-    if (PR.difficulty === "medium") chipColor = "#F1C40F";
-    else if (PR.difficulty === "hard") chipColor = "#E74C3C";
-
-    return (
-      <div id="paper" key={ind}>
-        <Paper
-          className={classes.paper}
-          // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
-        >
-          <Grid container wrap="nowrap" spacing={2}>
+  return (
+    <div id="paper" key={ind}>
+      <Paper
+        className={classes.paper}
+        // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
+      >
+        <Grid container wrap="nowrap" spacing={2} style={{ flexWrap: "wrap" }}>
+          <div style={{ display: "flex" }}>
             <Grid
               item
               style={{
@@ -268,69 +159,72 @@ const UserComponent = () => {
                 {getDate(PR.time)}
               </Typography>
             </Grid>
-            <Grid item xs style={{ display: "flex" }}>
-              <Chip
-                label={PR.repo}
-                variant="outlined"
-                className={classes.chip}
-                style={{ backgroundColor: "#5D3F6A", color: "white" }}
-                onClick={() => redirectTo(PR.repoLink)}
-              />
-              <Chip
-                label={PR.difficulty}
-                variant="outlined"
-                className={classes.chip}
-                style={{ backgroundColor: chipColor, color: "white" }}
-              />
-            </Grid>
-            <Grid
-              item
-              id="pop-div"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <SvgIcon
-                id="popup"
-                style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
-                onClick={() => redirectTo(PR.link)}
-                viewBox="0 0 18 18"
-              >
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                >
-                  <path
-                    d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
-                    fill="currentColor"
-                  ></path>
-                  <path
-                    d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </SvgIcon>
-            </Grid>
+          </div>
+          <Grid item xs style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Chip
+              label={PR.repo}
+              variant="outlined"
+              className={classes.chip}
+              style={{ backgroundColor: "#5D3F6A", color: "white" }}
+              onClick={() => redirectTo(PR.repoLink)}
+            />
+            <Chip
+              label={PR.difficulty}
+              variant="outlined"
+              className={classes.chip}
+              style={{ backgroundColor: chipColor, color: "white" }}
+            />
           </Grid>
-        </Paper>
-      </div>
-    );
-  };
+          <Grid
+            item
+            id="pop-div"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            <SvgIcon
+              id="popup"
+              style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
+              onClick={() => redirectTo(PR.link)}
+              viewBox="0 0 18 18"
+            >
+              <svg
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+              >
+                <path
+                  d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
+                  fill="currentColor"
+                ></path>
+                <path
+                  d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </SvgIcon>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
+  );
+};
 
-  const issueContent = (issue, ind) => {
-    console.log(issue);
-    return (
-      <div id="paper" key={ind}>
-        <Paper
-          className={classes.paper}
-          // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
-        >
-          <Grid container wrap="nowrap" spacing={2}>
+const IssueContent = (issue, ind) => {
+  const classes = useStyles();
+
+  return (
+    <div id="paper" key={ind}>
+      <Paper
+        className={classes.paper}
+        // style={{ maxWidth: "500px", margin: "10px", padding: "10px" }}
+      >
+        <Grid container wrap="nowrap" spacing={2} style={{ flexWrap: "wrap" }}>
+          <div style={{ display: "flex" }}>
             <Grid
               item
               style={{
@@ -363,57 +257,180 @@ const UserComponent = () => {
                 {getDate(issue.time)}
               </Typography>
             </Grid>
-            <Grid
-              item
-              xs
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <Chip
-                label={issue.repo}
-                variant="outlined"
-                className={classes.chip}
-                style={{ backgroundColor: "#5D3F6A", color: "white" }}
-                onClick={() => redirectTo(issue.repoLink)}
-              />
-            </Grid>
-            <Grid
-              item
-              id="pop-div"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <SvgIcon
-                id="popup"
-                style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
-                onClick={() => redirectTo(issue.link)}
-                viewBox="0 0 18 18"
-              >
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                >
-                  <path
-                    d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
-                    fill="currentColor"
-                  ></path>
-                  <path
-                    d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </SvgIcon>
-            </Grid>
+          </div>
+          <Grid item xs style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Chip
+              label={issue.repo}
+              variant="outlined"
+              className={classes.chip}
+              style={{ backgroundColor: "#5D3F6A", color: "white" }}
+              onClick={() => redirectTo(issue.repoLink)}
+            />
           </Grid>
-        </Paper>
-      </div>
-    );
+          <Grid
+            item
+            id="pop-div"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            <SvgIcon
+              id="popup"
+              style={{ cursor: "pointer", color: "rgb(100,100,100)" }}
+              onClick={() => redirectTo(issue.link)}
+              viewBox="0 0 18 18"
+            >
+              <svg
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+              >
+                <path
+                  d="M15 0H8v2h4.6L6.3 8.3l1.4 1.4L14 3.4V8h2V1c0-.6-.4-1-1-1z"
+                  fill="currentColor"
+                ></path>
+                <path
+                  d="M14 16H1c-.6 0-1-.4-1-1V2c0-.6.4-1 1-1h4v2H2v11h11v-3h2v4c0 .6-.4 1-1 1z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </SvgIcon>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
+  );
+};
+
+const Activity = ({ PRs, issues }) => {
+  let activity = [];
+  PRs.forEach((PR) => {
+    activity.push({ isPR: true, ...PR });
+  });
+  issues.forEach((issue) => {
+    activity.push({ isPR: false, ...issue });
+  });
+
+  return (
+    <div>
+      {activity
+        .sort((a, b) => {
+          const d1 = new Date(a.time).getTime();
+          const d2 = new Date(b.time).getTime();
+
+          return d2 - d1;
+        })
+        .map((act, index) => {
+          if (act.isPR) return PRContent(act, index);
+          return IssueContent(act, index);
+        })}
+    </div>
+  );
+};
+
+const UserComponent = () => {
+  const classes = useStyles();
+  const history = useHistory();
+
+  const url = window.location.pathname;
+  const username = url.split("/")[2];
+  const [author, setAuthor] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    image: null,
+    PR: 0,
+    issue: 0,
+    score: 0,
+    diff: [0, 0, 0, 0],
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  const [PRArray, setPRArray] = useState([]);
+  const [issueArray, setIssueArray] = useState([]);
+
+  const [PRInfo, setPRInfo] = useState(null);
+  const [issueInfo, setIssueInfo] = useState(null);
+
+  const getPRs = () => {
+    axios
+      .get(
+        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"'
+      )
+      .then((response) => {
+        // console.log(response.data);
+        setPRInfo(response.data.items);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
+  const getContributorIssues = () => {
+    axios
+      .get(
+        'https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"'
+      )
+      .then((response) => {
+        // console.log(response.data);
+        setIssueInfo(response.data.items);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const processUsersData = () => {
+    const userMap = new Map();
+    processPRs(userMap, PRInfo);
+    processIssues(userMap, issueInfo);
+
+    localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
+
+    // console.log([...userMap.entries()]);
+
+    const currentUser = userMap.get(username);
+    setUserInfo(currentUser);
+  };
+
+  const getData = (username) => {
+    getPRs(username);
+    getContributorIssues(username);
+  };
+
+  const loadDataFromStorage = (username) => {
+    const usersData = JSON.parse(localStorage.getItem("users_data"));
+    if (usersData) {
+      const userData = usersData.find((data) => data[0] === username);
+
+      if (userData) {
+        const PRs = userData[1].PRs;
+        const issues = userData[1].issues;
+
+        // console.log(usersData[1]);
+
+        setPRArray(PRs);
+        setIssueArray(issues);
+        setUserInfo(userData[1]);
+      } else history.replace("/");
+    }
+    setLoading(false);
+    getData(username);
+  };
+
+  useEffect(() => {
+    setAuthor(username);
+    loadDataFromStorage(username);
+  }, []);
+
+  useEffect(() => {
+    if (PRInfo && issueInfo) {
+      processUsersData();
+    }
+  }, [PRInfo, issueInfo]);
 
   return (
     <div
@@ -421,12 +438,28 @@ const UserComponent = () => {
         display: "flex",
         justifyContent: "space-evenly",
         flexWrap: "wrap",
+        flex: "1 1 auto",
       }}
     >
       {!loading ? (
-        <Grid container className={classes.align}>
-          <Grid item lg={4} md={10} xs={12} style={{ margin: "10px" }}>
-            <Card className={classes.card1}>
+        <Grid
+          container
+          id="user-wrapper"
+          className={classes.align}
+          style={{
+            marginBottom: document.getElementById("header-main")
+              ? `${document.getElementById("header-main").offsetHeight}px`
+              : "40px",
+          }}
+        >
+          <Grid
+            item
+            lg={4}
+            md={10}
+            xs={12}
+            style={{ margin: "10px", display: "flex", alignItems: "center" }}
+          >
+            <Card className={classes.card1} style={{ width: "100%" }}>
               <CardContent id="user-header" style={{ textAlign: "center" }}>
                 <Avatar
                   aria-label="recipe"
@@ -612,11 +645,18 @@ const UserComponent = () => {
               </CardActions>
             </Card>
           </Grid>
-          <Grid item lg={6} md={10} xs={12} style={{ margin: "10px" }}>
+          <Grid
+            item
+            lg={6}
+            md={10}
+            xs={12}
+            style={{ margin: "10px", display: "flex", alignItems: "center" }}
+          >
             <Card
               style={{
                 backgroundColor: "#FFFFFF",
                 boxShadow: "0px 0px 5px 5px rgb(0,0,0,0.05) ",
+                width: "100%",
               }}
             >
               <CardContent id="user-header" style={{ textAlign: "center" }}>
@@ -628,12 +668,7 @@ const UserComponent = () => {
                 <Typography gutterBottom variant="h5" component="div">
                   Activity
                 </Typography>
-
-                <div>{PRArray.map((PR, ind) => cardContent(PR, ind))}</div>
-
-                <div>
-                  {issueArray.map((issue, ind) => issueContent(issue, ind))}
-                </div>
+                <Activity PRs={PRArray} issues={issueArray} />
               </CardContent>
             </Card>
           </Grid>

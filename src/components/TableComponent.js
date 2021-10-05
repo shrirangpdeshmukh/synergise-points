@@ -38,7 +38,7 @@ const TableComponent = ({ data }) => {
   const classes = useStyles();
   const history = useHistory();
 
-  console.log(data);
+  // console.log(data);
 
   const displayUser = (author) => {
     history.push(`/user/${author}`);
@@ -48,7 +48,6 @@ const TableComponent = ({ data }) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        paddingTop: "20px",
         flexDirection: "column",
       }}
     >

@@ -31,7 +31,7 @@ const UserPage = () => {
         `https://api.github.com/search/issues?q=org:Dummy-Organ+is:pr+is:merged+label:"syn-accepted"+author:"${userID}"`
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
 
         const newData = { ...userInfo };
         // newData.PR = response.data.total_count;
@@ -52,7 +52,7 @@ const UserPage = () => {
         `https://api.github.com/search/issues?q=org:Dummy-Organ+is:issue+label:"syn-accepted"+author:"${userID}"`
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
 
         const newData = { ...userInfo };
         // newData.issues = response.data.total_count;
