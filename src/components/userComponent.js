@@ -116,8 +116,8 @@ const redirectTo = (link) => {
 
 const PRContent = (PR, ind) => {
   const classes = useStyles();
-
-  let chipColor = "#2ECC71";
+  let chipColor = "#1ABC9C";
+  if (PR.difficulty === "easy") chipColor = "#2ECC71";
   if (PR.difficulty === "medium") chipColor = "#F1C40F";
   else if (PR.difficulty === "hard") chipColor = "#E74C3C";
 
@@ -498,6 +498,43 @@ const UserComponent = () => {
                   marginBottom: "20px",
                 }}
               >
+                <Tooltip title="beginner" placement="top">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width={30}
+                      height={30}
+                      viewBox="0 0 172 172"
+                      style={{ fill: "#000000" }}
+                    >
+                      <g
+                        fill="none"
+                        fillRule="nonzero"
+                        stroke="none"
+                        strokeWidth={1}
+                        strokeLinecap="butt"
+                        strokeLinejoin="miter"
+                        strokeMiterlimit={10}
+                        strokeDasharray="true"
+                        strokeDashoffset={0}
+                        fontFamily="none"
+                        fontWeight="none"
+                        fontSize="none"
+                        textAnchor="none"
+                        style={{ mixBlendMode: "normal" }}
+                      >
+                        <path d="M0,172v-172h172v172z" fill="none"></path>
+                        <g fill="#1abc9c">
+                          <path d="M86,6.88c-43.69832,0 -79.12,35.42168 -79.12,79.12c0,43.69832 35.42168,79.12 79.12,79.12c43.69832,0 79.12,-35.42168 79.12,-79.12c0,-43.69832 -35.42168,-79.12 -79.12,-79.12zM63.43172,55.04h23.6836c11.37264,0 18.32203,5.96232 18.32203,15.4464c0,6.43624 -4.71785,12.2736 -10.68281,13.34344v0.69203c8.45208,1.07328 13.82047,6.86264 13.82047,15.05672c-0.00344,10.89792 -7.81089,17.3814 -20.98265,17.3814h-24.16063zM71.15156,61.85953v19.87406h12.35578c9.3568,0 14.12281,-3.34992 14.12281,-9.91688c0,-6.30896 -4.46598,-9.95719 -12.1475,-9.95719zM71.15156,88.37844v21.75531h15.27844c9.31208,0 14.20344,-3.77261 14.20344,-10.93812c0,-7.16208 -5.06642,-10.81719 -14.93578,-10.81719z"></path>
+                        </g>
+                      </g>
+                    </svg>
+                    <span className={classes.span}>{userInfo.diff[0]}</span>
+                  </div>
+                </Tooltip>
+
                 <Tooltip title="easy" placement="top">
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
