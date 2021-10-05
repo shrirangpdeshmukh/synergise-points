@@ -48,8 +48,12 @@ const Table = () => {
 
     // console.log([...userMap.entries()]);
     // store.dispatch(boardActions.setLeaderBoardData([...userMap.entries()]));
-    localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
-    setData([...userMap.entries()]);
+    const usersData = [...userMap.entries()].sort(
+      (a, b) => b[1].score - a[1].score
+    );
+
+    localStorage.setItem("users_data", JSON.stringify(usersData));
+    setData(usersData);
   };
 
   const getData = () => {

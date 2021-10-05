@@ -385,7 +385,11 @@ const UserComponent = () => {
     processPRs(userMap, PRInfo);
     processIssues(userMap, issueInfo);
 
-    localStorage.setItem("users_data", JSON.stringify([...userMap.entries()]));
+    const usersData = [...userMap.entries()].sort(
+      (a, b) => b[1].score - a[1].score
+    );
+
+    localStorage.setItem("users_data", JSON.stringify(usersData));
 
     // console.log([...userMap.entries()]);
 

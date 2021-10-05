@@ -1,5 +1,8 @@
-import { Avatar, makeStyles } from "@material-ui/core";
+import { useState, useEffect } from "react";
+import { Avatar, TextField, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+
+import SearchIcon from "@mui/icons-material/Search";
 
 const useStyles = makeStyles(() => ({
   chip: {
@@ -38,11 +41,42 @@ const TableComponent = ({ data }) => {
   const classes = useStyles();
   const history = useHistory();
 
-  // console.log(data);
+  const [searchString, setSearchString] = useState("");
+
+  let results = 0;
+
+  const showResults = (str) => {
+    setSearchString(str);
+  };
 
   const displayUser = (author) => {
     history.push(`/user/${author}`);
   };
+
+  const showName = (name) => {
+    if (searchString === "") return name;
+
+    const pieces = name.toLowerCase().split(searchString.toLowerCase());
+
+    let pos = 0;
+    return pieces.map((piece, index) => {
+      const curr = pos;
+      pos = pos + piece.length + searchString.length;
+      return (
+        <>
+          {name.substr(curr, piece.length)}
+          {index !== pieces.length - 1 ? (
+            <b style={{ backgroundColor: "lightblue", fontWeight: 500 }}>
+              {name.substr(curr + piece.length, searchString.length)}
+            </b>
+          ) : (
+            ""
+          )}
+        </>
+      );
+    });
+  };
+
   return (
     <div
       style={{
@@ -63,10 +97,43 @@ const TableComponent = ({ data }) => {
           <div className={classes.chip}>live</div>
         </h1>
       </div>
+
       <div style={{ margin: "auto" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <TextField
+            id="standard-search"
+            type="search"
+            variant="standard"
+            autoComplete="off"
+            helperText="Search contributor"
+            onChange={(event) => {
+              event.target.value = event.target.value.split(" ").join("");
+              showResults(event.target.value);
+            }}
+          />
+          <SearchIcon />
+        </div>
         <table className={classes.table}>
           <tbody>
             {data.map((contr, index) => {
+              if (index === 0) results = 0;
+              if (
+                searchString !== "" &&
+                !contr[0].toLowerCase().includes(searchString.toLowerCase())
+              ) {
+                if (index === data.length - 1 && results === 0) {
+                  return (
+                    <tr>
+                      <div style={{ fontSize: "22px" }}>
+                        No results ... 🚶🚶🚶
+                      </div>
+                    </tr>
+                  );
+                }
+                return null;
+              }
+              ++results;
+
               return (
                 <tr
                   className={classes.row}
@@ -80,7 +147,7 @@ const TableComponent = ({ data }) => {
                     <Avatar src={contr[1].image} />
                   </td>
                   <td className={classes.cell} align="left">
-                    {contr[0]}
+                    {showName(contr[0])}
                   </td>
                   {contr[1].pr > 0 ? (
                     <td
