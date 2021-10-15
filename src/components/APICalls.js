@@ -1,4 +1,4 @@
-const organization = "Dummy-Organ";
+const organization = "Synergise-IIT-Bhubaneswar";
 const acceptLabel = "syn-accepted";
 
 export const PRAPI = `https://api.github.com/search/issues?q=org:${organization}+is:pr+is:merged+label:"${acceptLabel}"`;
