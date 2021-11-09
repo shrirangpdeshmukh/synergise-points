@@ -9,9 +9,9 @@ Synergise is an initiative by Neuromancers and GDSC IIT Bhubaneswar to nurture s
 - The web app keeps track of merged pull requests and issues created by the contributors using GitHub API and specific tags.
 - Students are allotted points based on the difficulty assigned to the PR by the project maintainer using the tags and the number of issues they have created, which the maintainer accepts.
 - Details of how the user scored the total points can be seen on the specific user page.
-- Webapp also supports searching the contributor using their GitHub ids.
+- Webapp also supports searching the contributor using their GitHub IDs.
 - The web app is completely responsive for all screen sizes.
-  <br/>
+  <br/><br/>
 
 ![homepage](./images/homepage.png)
 <br/><br/><br/>
